@@ -10,6 +10,7 @@
     <input type="text" id="guessField" />
     <input type="submit" value="猜!" id="guessSubmit" />
     <p class="message"></p>
+    <button onclick="showAnswer()">揭曉答案</button>
   </body>
   <script>
     // Random number
@@ -25,6 +26,14 @@
     guessSubmit.addEventListener("click", checkGuess);
     // 宣告一個變數0
     var tryToCount = 0;
+
+
+
+　　function showAnswer(){
+　　　const answer = targetNumber;
+      alert(`猜數字的答案是: ${answer}`);
+
+}
 
     // Guess function
     function checkGuess() {
