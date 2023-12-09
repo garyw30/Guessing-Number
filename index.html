@@ -28,11 +28,10 @@
     var tryToCount = 0;
 
 
-
+    //揭曉答案的功能
 　　function showAnswer(){
 　　　const answer = targetNumber;
       alert(`猜數字的答案是: ${answer}`);
-
 }
 
     // Guess function
@@ -42,6 +41,7 @@
       const userGuess = parseInt(guessField.value);
       console.log("userGuess: " + userGuess);
 
+      
       if (userGuess === targetNumber) {
         message.textContent = `恭喜你，你猜對了！你猜了${tryToCount}次！`;
         message.style.color = "green";
@@ -51,6 +51,11 @@
         message.style.color = "red";
       } else {
         message.textContent = "太大了，再試一次。";
+        message.style.color = "red";
+      }
+      //超過五次就失敗
+      if (tryToCount >= 5 & userGuess !== targetNumber ){
+        message.textContent = `You Failed! 答案是 ${targetNumber}。`;
         message.style.color = "red";
       }
 
