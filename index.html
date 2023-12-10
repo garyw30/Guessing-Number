@@ -1,68 +1,107 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="zh-Hant-TW">
-  <head>
-    <title>猜數字遊戲</title>
-    <meta charset="utf-8" />
-  </head>
-  <body>
-    <h1>猜數字遊戲</h1>
-    <p>1 到 100 之間的數字，你猜是多少？</p>
-    <input type="text" id="guessField" />
-    <input type="submit" value="猜!" id="guessSubmit" />
-    <p class="message"></p>
-    <button onclick="showAnswer()">揭曉答案</button>
-  </body>
+<head>
+  <title>猜數字遊戲</title>
+  <meta charset="utf-8" />
+</head>
+<body>
+  <h1>猜數字遊戲</h1>
+  <p>1 到 100 之間的數字，你猜是多少？</p>
+  <input type="text" id="guessField" />
+  <input type="submit" value="猜!" id="guessSubmit" />
+  <p class="message"></p>
+  <button onclick="showAnswer()">揭曉答案</button>
+  <button onclick="playAgain()">再玩一次吧</button>
+
   <script>
-    // Random number
-    const targetNumber = Math.floor(Math.random() * 100) + 1;
-    console.log("answer: " + targetNumber);
-
-    // Get element
-    const guessField = document.getElementById("guessField");
-    const guessSubmit = document.getElementById("guessSubmit");
-    const message = document.querySelector(".message");
-
-    // Event listener
-    guessSubmit.addEventListener("click", checkGuess);
     // 宣告一個變數0
     var tryToCount = 0;
+    
+    // 初始化遊戲
+    resetGame();
 
+    // Event listener
+    document.getElementById("guessSubmit").addEventListener("click", checkGuess);
 
-    //揭曉答案的功能
-　　function showAnswer(){
-　　　const answer = targetNumber;
-      alert(`猜數字的答案是: ${answer}`);
-}
+    // 生成隨機數字的函數
+    function newNumber() {
+      return Math.floor(Math.random() * 100) + 1;
+    }
 
-    // Guess function
-    function checkGuess() {
-      // 把tryToCount放在猜數字的功能函數內，只要有觸發了猜數字的行為就會自動加一
-      tryToCount = tryToCount + 1;
-      const userGuess = parseInt(guessField.value);
-      console.log("userGuess: " + userGuess);
+    // 初始化遊戲狀態
+    function resetGame() {
+      // Random number
+      targetNumber = newNumber();
+      console.log("新的答案是: " + targetNumber);
 
-      
-      if (userGuess === targetNumber) {
-        message.textContent = `恭喜你，你猜對了！你猜了${tryToCount}次！`;
-        message.style.color = "green";
-        guessSubmit.disabled = true;
-      } else if (userGuess < targetNumber) {
-        message.textContent = "太小了，再試一次。";
-        message.style.color = "red";
-      } else {
-        message.textContent = "太大了，再試一次。";
-        message.style.color = "red";
-      }
-      //超過五次就失敗
-      if (tryToCount >= 5 & userGuess !== targetNumber ){
-        message.textContent = `You Failed! 答案是 ${targetNumber}。`;
-        message.style.color = "red";
-        guessSubmit.disabled = true;
-      }
+      // Get element
+      const guessField = document.getElementById("guessField");
+      const message = document.querySelector(".message");
+      const guessSubmit = document.getElementById("guessSubmit");
 
+      // 清空文字提示
+      message.textContent = "";
+
+      // 恢復 "猜！" 按鈕的狀態
+      guessSubmit.disabled = false;
+
+      // 清空猜的次數
+      tryToCount = 0;
+
+      // 清空輸入框
       guessField.value = "";
       guessField.focus();
     }
-  </script>
-</html>
 
+    // 遊戲結束後
+    function endGame(messageText, color) {
+      const message = document.querySelector(".message");
+      const guessSubmit = document.getElementById("guessSubmit");
+
+      message.textContent = messageText;
+      message.style.color = color;
+      guessSubmit.disabled = true;
+    }
+
+    // 揭曉答案的功能
+    function showAnswer() {
+      const answer = targetNumber;
+      alert(`猜數字的答案是: ${answer}`);
+    }
+
+    // 再玩一次的功能
+    function playAgain() {
+      resetGame();
+      // 重新生成正確答案
+      targetNumber = newNumber();
+      console.log("新的答案: " + targetNumber);
+    }
+
+    // 猜數字的功能
+    function checkGuess() {
+      // 把tryToCount放在猜數字的功能函數內，只要有觸發了猜數字的行為就會自動加一
+      tryToCount++;
+      const userGuess = parseInt(document.getElementById("guessField").value);
+      console.log("userGuess: " + userGuess);
+
+      if (userGuess === targetNumber) {
+        endGame(`恭喜你，你猜對了！你猜了${tryToCount}次！`, "green");
+      } else if (userGuess < targetNumber) {
+        document.querySelector(".message").textContent = "太小了，再試一次。";
+        document.querySelector(".message").style.color = "red";
+      } else {
+        document.querySelector(".message").textContent = "太大了，再試一次。";
+        document.querySelector(".message").style.color = "red";
+      }
+
+      // 超過五次就失敗
+      if (tryToCount >= 5 && userGuess !== targetNumber) {
+        endGame(`You Failed! 答案是 ${targetNumber}。`, "red");
+        setTimeout("resetGame()", 5000);
+      }
+    }
+
+  
+  </script>
+</body>
+</html>
